@@ -12,6 +12,7 @@ import {
 
 import NavBar from "../../components/NavBar/NavBar"
 import Logo from "../../components/Logo/Logo"
+import '../../assets/navStyle.less'
 
 const { Item } = List
 
@@ -83,7 +84,7 @@ export default class Register extends Component<IProps, IState> {
                 checked={this.state.type === "student"}
                 onChange={value => this.handleChange("type", "student")}
               >
-                求职
+                &nbsp;&nbsp;求职
               </Radio>
               &nbsp;&nbsp;&nbsp;&nbsp;
               <Radio
@@ -91,7 +92,7 @@ export default class Register extends Component<IProps, IState> {
                 checked={this.state.type === "hr"}
                 onChange={value => this.handleChange("type", "hr")}
               >
-                招聘
+                &nbsp;&nbsp;招聘
               </Radio>
             </Item>
             <WhiteSpace />

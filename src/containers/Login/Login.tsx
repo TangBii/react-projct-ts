@@ -5,11 +5,14 @@ import {
   InputItem,
   Button,
   WhiteSpace,
-  WingBlank
+  WingBlank,
+  Radio
 } from 'antd-mobile'
 
 import NavBar from '../../components/NavBar/NavBar'
 import Logo from '../../components/Logo/Logo'
+
+const {Item} = List
 
 interface IProps extends RouteComponentProps {
 
@@ -17,7 +20,8 @@ interface IProps extends RouteComponentProps {
 
 interface IState {
   username: string,
-  password: string
+  password: string,
+  autoLogin: boolean
 
   // type 怎么获取？
 }
@@ -29,12 +33,13 @@ export default class Login extends Component<IProps, IState>{
 
     this.state = {
       username: '',
-      password: ''
+      password: '',
+      autoLogin: false
     }
   }
 
   // 收集表单输入
-  handleChange = (name: keyof IState, value: string) => {
+  handleChange = (name: keyof IState, value: string | boolean) => {
     this.setState({
       [name]: value
     }as Pick<IState, keyof IState>)
@@ -68,6 +73,17 @@ export default class Login extends Component<IProps, IState>{
             >
               密码
             </InputItem>
+            <WhiteSpace/>
+            <Item
+               onClick={(e) => this.handleChange('autoLogin', !this.state.autoLogin)}
+            >
+            <Radio
+                name="type"
+                checked={this.state.autoLogin}
+            >
+                &nbsp;&nbsp;七天免登陆
+              </Radio>
+            </Item>
             <WhiteSpace/>
             <Button type="primary">登陆</Button>
             <Button
