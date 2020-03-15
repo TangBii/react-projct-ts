@@ -5,7 +5,6 @@ import Login from './Login'
 import Register from './Register'
 import Main from './Main'
 
-
 export default class App extends Component {
   render() {
     return (
@@ -13,8 +12,6 @@ export default class App extends Component {
         <Switch>
           <Route path='/login' component={Login}/>
           <Route path='/register' component={Register}/>
-
-          {/* 默认路由 */}
           <Route component={Main}/>
         </Switch>
       </HashRouter>
