@@ -1,9 +1,9 @@
 import React, {Component} from 'react'
 import {HashRouter, Switch, Route} from 'react-router-dom'
 
-import Login from './Login'
-import Register from './Register'
-import Main from './Main'
+import Login from './Login/Login'
+import Register from './Register/Register'
+import Main from './Main/Main'
 
 export default class App extends Component {
   render() {
