@@ -1,40 +1,44 @@
 import React, {Component} from 'react'
-import {RouteComponentProps} from 'react-router-dom'
+import {RouteComponentProps, Redirect} from 'react-router-dom'
+import {connect} from 'react-redux'
 import {
   List,
   InputItem,
   Button,
   WhiteSpace,
   WingBlank,
-  Radio
+  Radio,
+  Modal
 } from 'antd-mobile'
 
 import NavBar from '../../components/NavBar/NavBar'
 import Logo from '../../components/Logo/Logo'
+import {login} from '../../redux/actions'
+import {AppState} from '../../redux/reducers'
 
 const {Item} = List
 
 interface IProps extends RouteComponentProps {
-
+  login: (username: string, password: string, autoLogin: boolean)=>any,
+  message: string,
+  redirectTo: string
 }
 
 interface IState {
   username: string,
   password: string,
   autoLogin: boolean
-
-  // type 怎么获取？
 }
 
 
-export default class Login extends Component<IProps, IState>{
+class Login extends Component<IProps, IState>{
   constructor(props: IProps) {
     super(props)
 
     this.state = {
       username: '',
       password: '',
-      autoLogin: false
+      autoLogin: false,
     }
   }
 
@@ -50,10 +54,20 @@ export default class Login extends Component<IProps, IState>{
     this.props.history.push('/register')
   }
 
+  // 处理登陆
+  handleLogin = (username: string, password: string, autoLogin: boolean) => {
+    this.props.login(username, password, autoLogin)
+    setTimeout(() => {
+      if (this.props.message) {
+        Modal.alert(' ', this.props.message)
+      }
+    }, 100);
+  }
 
   render() {
     return (
       <div>
+        {this.props.redirectTo && <Redirect to='/main'/>}
         <NavBar title={document.title}/>
         <Logo/>
         <WingBlank>
@@ -85,7 +99,16 @@ export default class Login extends Component<IProps, IState>{
               </Radio>
             </Item>
             <WhiteSpace/>
-            <Button type="primary">登陆</Button>
+            <Button
+             type="primary"
+             onClick={() => this.handleLogin(
+               this.state.username,
+               this.state.password,
+               this.state.autoLogin
+               )}
+            >
+              登陆
+            </Button>
             <Button
               onClick={this.toRegister}
             >
@@ -97,3 +120,8 @@ export default class Login extends Component<IProps, IState>{
     )
   }
 }
+
+export default connect(
+  (state: AppState) => state.user,
+  {login}
+)(Login)

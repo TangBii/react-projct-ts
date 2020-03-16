@@ -1,22 +1,28 @@
 import React, { Component } from "react"
-import { RouteComponentProps } from "react-router-dom"
-
+import { RouteComponentProps, Redirect } from "react-router-dom"
+import {connect} from 'react-redux'
 import {
   WhiteSpace,
   WingBlank,
   InputItem,
   Button,
   List,
-  Radio
+  Radio,
+  Modal
 } from "antd-mobile"
 
 import NavBar from "../../components/NavBar/NavBar"
 import Logo from "../../components/Logo/Logo"
-import '../../assets/navStyle.less'
+import { register } from "../../redux/actions"
+import {AppState} from '../../redux/reducers'
 
 const { Item } = List
 
-interface IProps extends RouteComponentProps {}
+interface IProps extends RouteComponentProps {
+  register: (username: string, password: string, password2: string, type: string)=>any,
+  message: string,
+  redirectTo: string
+}
 
 interface IState {
   username: string
@@ -25,7 +31,7 @@ interface IState {
   type: string
 }
 
-export default class Register extends Component<IProps, IState> {
+class Register extends Component<IProps, IState> {
   constructor(props: IProps) {
     super(props)
     
@@ -47,9 +53,21 @@ export default class Register extends Component<IProps, IState> {
     this.props.history.push("/login")
   }
 
+  // 注册
+  handleRegister = (user: IState) => {
+    const {username, password, password2, type} = user
+    this.props.register(username, password, password2, type)
+    setTimeout(() => {
+      if (this.props.message) {
+         Modal.alert(' ', this.props.message)
+      }
+    }, 100);
+  }
+
   render() {
     return (
       <div>
+        {this.props.redirectTo && <Redirect to={this.props.redirectTo}/>}
         <NavBar title={document.title} />
         <Logo />
         <WingBlank>
@@ -96,7 +114,12 @@ export default class Register extends Component<IProps, IState> {
               </Radio>
             </Item>
             <WhiteSpace />
-            <Button type="primary">注册</Button>
+            <Button
+             type="primary"
+             onClick={() => this.handleRegister(this.state)}
+            >
+              注册
+            </Button>
             <Button onClick={this.toLogin}>已有账号</Button>
           </List>
         </WingBlank>
@@ -104,3 +127,9 @@ export default class Register extends Component<IProps, IState> {
     )
   }
 }
+
+// AppState
+export default connect(
+  (state: AppState) => state.user,
+  {register}
+)(Register)

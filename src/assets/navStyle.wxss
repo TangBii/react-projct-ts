@@ -1,5 +1,5 @@
 .am-radio {
-  border: 1.5px solid #F1A200;
+  border: 1.5px solid #b9b7b3;
   border-radius: 50%;
   top: -1.5px;
 }
@@ -8,4 +8,7 @@
   width: 6px;
   height: 11px;
   top: -0.5px;
+}
+.am-radio-checked {
+  border-color: #F1A200;
 }
