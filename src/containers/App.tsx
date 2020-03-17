@@ -5,8 +5,8 @@ import Login from './Login/Login'
 import Register from './Register/Register'
 import Main from './Main/Main'
 
-
 import '../assets/navStyle.less'
+import '../assets/main.less'
 
 export default class App extends Component {
   render() {

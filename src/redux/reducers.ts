@@ -5,13 +5,15 @@ import {
   LOGIN_FAIL,
   UPDATE_SUCCESS,
   UPDATE_FAIL,
+  USER_HAS,
+  USER_NOHAS,
   LoginAction
 } from './action-types'
 
 import {getRedirectPath} from '../utils/index'
 
 
-interface IUser {
+export interface IUser {
   username: string,
   type: string,
   message: string
@@ -21,6 +23,7 @@ interface IUser {
   company?: string,
   salary?: string ,
   redirectTo?: string  // 传递重定向地址数据
+  _id?: string
 }
 
 const initailUser: IUser = {
@@ -44,6 +47,10 @@ function user(state = initailUser, action: LoginAction) {
     case UPDATE_SUCCESS:
       return {...state, message: '', ...(action.data as object), redirectTo}
     case UPDATE_FAIL:
+      return {...state, message: action.data}
+    case USER_HAS:
+      return {...state, message:'',...(action.data as object), redirectTo}
+    case USER_NOHAS:
       return {...state, message: action.data}
     default: 
       return state

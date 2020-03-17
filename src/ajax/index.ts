@@ -8,3 +8,6 @@ export const reqRegister = (user: IData) => ajax('/register', user, 'POST')
 
 // 信息完善请求
 export const reqUpdate = (user: IData) => ajax('/update', user, 'POST')
+
+// 获取信息
+export const reqUserInfo = () => ajax('/getinfo')

@@ -61,14 +61,14 @@ class Register extends Component<IProps, IState> {
       if (this.props.message) {
          Modal.alert(' ', this.props.message)
       }
-    }, 500);
+    }, 300);
   }
 
   render() {
     return (
       <div>
         {this.props.redirectTo && <Redirect to={this.props.redirectTo}/>}
-        <NavBar title={document.title} />
+        <NavBar title='比&nbsp;特&nbsp;树&nbsp;校&nbsp;招'/>
         <Logo />
         <WingBlank>
           <List>

@@ -3,6 +3,8 @@ import {
   LOGIN_FAIL,
   UPDATE_SUCCESS,
   UPDATE_FAIL,
+  USER_HAS,
+  USER_NOHAS,
   IUser
 } from "./action-types"
 import { Dispatch } from "redux"
@@ -10,7 +12,8 @@ import { Dispatch } from "redux"
 import { 
   reqRegister,
   reqLogin,
-  reqUpdate
+  reqUpdate,
+  reqUserInfo
 } from "../ajax/index"
 
 // 同步
@@ -19,6 +22,9 @@ const loginFail = (message: string) => ({ type: LOGIN_FAIL, data: message })
 
 const updateSuccess = (user: IUser) => ({ type: UPDATE_SUCCESS, data: user })
 const updateFail = (message: string) => ({ type: UPDATE_FAIL, data: message })
+
+const hasUser = (user: IUser) => ({ type: USER_HAS, data: user })
+const noUser = (message: string) => ({ type: USER_NOHAS, data: message })
 
 
 // 登陆
@@ -87,4 +93,18 @@ export function update(
       dispatch(updateSuccess(result.data))
     }
   }
+}
+
+// 接收用户信息
+export function getUser() {
+  return async (dispatch: Dispatch) => {
+    const response = await reqUserInfo()
+    const result = response.data
+    if (result.status === 0) {
+      dispatch(noUser(result.message))
+    } else {
+      dispatch(hasUser(result.data))
+    }
+  }
+
 }

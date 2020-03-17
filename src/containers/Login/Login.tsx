@@ -1,6 +1,7 @@
 import React, {Component} from 'react'
 import {RouteComponentProps, Redirect} from 'react-router-dom'
 import {connect} from 'react-redux'
+import Cookies from 'js-cookie'
 import {
   List,
   InputItem,
@@ -61,14 +62,23 @@ class Login extends Component<IProps, IState>{
       if (this.props.message) {
         Modal.alert(' ', this.props.message)
       }
-    }, 500);
+    }, 300);
+
+    // 需要一个延时才能设置好 cookie
+    setTimeout(() => {
+      this.setState({})
+    }, 100);
   }
 
   render() {
     return (
       <div>
-        {this.props.redirectTo && <Redirect to={this.props.redirectTo}/>}
-        <NavBar title={document.title}/>
+        {
+          Cookies.get('userid') &&
+          this.props.redirectTo &&
+          <Redirect to={this.props.redirectTo}/>
+        }
+        <NavBar title='比&nbsp;特&nbsp;树&nbsp;校&nbsp;招'/>
         <Logo/>
         <WingBlank>
           <List>
