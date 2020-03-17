@@ -1,11 +1,12 @@
 import React, { Component } from "react"
 import { connect } from "react-redux"
 import { AppState } from "../../redux/reducers"
-import { List, WhiteSpace, InputItem, TextareaItem, Button, Modal } from "antd-mobile"
+import { List, WhiteSpace, InputItem, TextareaItem, Button, Modal} from "antd-mobile"
 import {Redirect} from 'react-router'
 
 
 import AvatarList from "../../components/AvatarList/AvatarList"
+import NavBar from '../../components/NavBar/NavBar'
 import {update} from '../../redux/actions'
 
 
@@ -63,11 +64,13 @@ class StuInfo extends Component<IProps, IState> {
     return (
       <div>
         {this.props.redirectTo && <Redirect to={this.props.redirectTo}/>}
+        <NavBar title="完善用户信息"/>
         <AvatarList handleChange={this.handleChange}/>
         <List>
           <WhiteSpace />
           <InputItem
            onChange={ value => this.handleChange('post', value)}
+           placeholder="请输入求职岗位"
           >
             求职岗位
           </InputItem>
@@ -76,6 +79,7 @@ class StuInfo extends Component<IProps, IState> {
            title="个人介绍" 
            rows={2}
            onChange={value => this.handleChange('info', value)}
+           placeholder="个人介绍"
           />
           <WhiteSpace />
           <Button

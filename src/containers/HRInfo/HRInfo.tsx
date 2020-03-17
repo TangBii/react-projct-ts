@@ -6,6 +6,8 @@ import {Redirect} from 'react-router'
 
 
 import AvatarList from "../../components/AvatarList/AvatarList"
+import NavBar from '../../components/NavBar/NavBar'
+
 import {update} from '../../redux/actions'
 
 
@@ -66,23 +68,27 @@ class HRInfo extends Component<IProps, IState> {
     return (
       <div>
         {this.props.redirectTo && <Redirect to={this.props.redirectTo}/>}
+        <NavBar title="完善用户信息"/>
         <AvatarList handleChange={this.handleChange}/>
         <List>
           <WhiteSpace />
           <InputItem
            onChange={ value => this.handleChange('post', value)}
+           placeholder="请输入招聘岗位"
           >
             招聘岗位
           </InputItem>
           <WhiteSpace />
           <InputItem
            onChange={ value => this.handleChange('company', value)}
+           placeholder="请输入公司名称"
           >
             公司名称
           </InputItem>
           <WhiteSpace />
           <InputItem
            onChange={ value => this.handleChange('salary', value)}
+           placeholder="请输入职位薪资"
           >
             职位薪资
           </InputItem>
@@ -91,6 +97,7 @@ class HRInfo extends Component<IProps, IState> {
            title="公司介绍" 
            rows={2}
            onChange={value => this.handleChange('info', value)}
+           placeholder="公司介绍"
           />
           <WhiteSpace />
           <Button
