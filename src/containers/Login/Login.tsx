@@ -61,13 +61,13 @@ class Login extends Component<IProps, IState>{
       if (this.props.message) {
         Modal.alert(' ', this.props.message)
       }
-    }, 100);
+    }, 500);
   }
 
   render() {
     return (
       <div>
-        {this.props.redirectTo && <Redirect to='/main'/>}
+        {this.props.redirectTo && <Redirect to={this.props.redirectTo}/>}
         <NavBar title={document.title}/>
         <Logo/>
         <WingBlank>

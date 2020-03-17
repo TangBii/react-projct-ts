@@ -1,7 +1,7 @@
 import axios from 'axios'
 
 export interface IData{
-  [ket: string]: string | number | boolean
+  [ket: string]: string | number | boolean | undefined
 }
 
 

@@ -61,7 +61,7 @@ class Register extends Component<IProps, IState> {
       if (this.props.message) {
          Modal.alert(' ', this.props.message)
       }
-    }, 100);
+    }, 500);
   }
 
   render() {

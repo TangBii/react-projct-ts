@@ -1,11 +1,24 @@
-import { LOGIN_SUCCESS, LOGIN_FAIL, IUser } from "./action-types"
+import { 
+  LOGIN_SUCCESS,
+  LOGIN_FAIL,
+  UPDATE_SUCCESS,
+  UPDATE_FAIL,
+  IUser
+} from "./action-types"
 import { Dispatch } from "redux"
 
-import { reqRegister, reqLogin } from "../ajax/index"
+import { 
+  reqRegister,
+  reqLogin,
+  reqUpdate
+} from "../ajax/index"
 
 // 同步
 const loginSuccess = (user: IUser) => ({ type: LOGIN_SUCCESS, data: user })
 const loginFail = (message: string) => ({ type: LOGIN_FAIL, data: message })
+
+const updateSuccess = (user: IUser) => ({ type: UPDATE_SUCCESS, data: user })
+const updateFail = (message: string) => ({ type: UPDATE_FAIL, data: message })
 
 
 // 登陆
@@ -53,3 +66,25 @@ export function register(
   }
 }
 
+// 信息完善
+export function update(
+  avatar: string,
+  post?: string,
+  info?: string,
+  company?: string,
+  salary?: string
+) {
+  if (!avatar) {
+    return updateFail('请选择头像')
+  }
+
+  return async (dispatch: Dispatch) => {
+    const response = await reqUpdate({avatar, post, info, company, salary})
+    const result = response.data
+    if (result.status === 0) {
+      dispatch(updateFail(result.message))
+    } else {
+      dispatch(updateSuccess(result.data))
+    }
+  }
+}
