@@ -30,7 +30,6 @@ class Main extends Component<IProps> {
     super(props)
   }
   componentDidMount() {
-    console.log(this.props)
     // 如果存在 cookie 请求获取 user
     const {username} = this.props
     if (Cookies.get('userid') && !username) {
@@ -64,7 +63,7 @@ class Main extends Component<IProps> {
         hide: false
       },
       {
-        title: '公司列表',
+        title: 'HR列表',
         icon: 'hr',
         selectedIcon: 'hr-selected',
         path: '/student',
@@ -96,7 +95,7 @@ class Main extends Component<IProps> {
     const currentTab = tabBarList.find(item => item.path === pathname)
     return (
       <>
-      {currentTab && <NavBar>title</NavBar>}
+      {currentTab && <NavBar>{currentTab.title}</NavBar>}
       <Switch>
         <Route path='/studentinfo' component={StuInfo}/>
         <Route path='/hrInfo' component={HRInfo}/>

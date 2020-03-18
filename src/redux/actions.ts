@@ -5,9 +5,12 @@ import {
   UPDATE_FAIL,
   USER_HAS,
   USER_NOHAS,
+  LOG_OUT,
   IUser
 } from "./action-types"
 import { Dispatch } from "redux"
+import Cookies from 'js-cookie'
+
 
 import { 
   reqRegister,
@@ -25,6 +28,11 @@ const updateFail = (message: string) => ({ type: UPDATE_FAIL, data: message })
 
 const hasUser = (user: IUser) => ({ type: USER_HAS, data: user })
 const noUser = (message: string) => ({ type: USER_NOHAS, data: message })
+export const logout = () => {
+  // 记得清除 cookie
+  Cookies.remove('userid')
+  return {type: LOG_OUT, data: 'logout'}
+}
 
 
 // 登陆

@@ -7,7 +7,8 @@ import {
   UPDATE_FAIL,
   USER_HAS,
   USER_NOHAS,
-  LoginAction
+  LoginAction,
+  LOG_OUT
 } from './action-types'
 
 import {getRedirectPath} from '../utils/index'
@@ -52,6 +53,8 @@ function user(state = initailUser, action: LoginAction) {
       return {...state, message:'',...(action.data as object), redirectTo}
     case USER_NOHAS:
       return {...state, message: action.data}
+    case LOG_OUT:
+      return initailUser
     default: 
       return state
   }
