@@ -2,6 +2,7 @@ import React from 'react'
 import {connect} from 'react-redux'
 import {Result, List, Button, WhiteSpace, Modal} from 'antd-mobile'
 import {Redirect} from 'react-router-dom'
+import Cookies from 'js-cookie'
 
 
 import {AppState} from '../../redux/reducers'
@@ -32,6 +33,8 @@ class Personal extends React.Component<IProps>{
       {
         text: '确认',
         onPress: () => {
+          // 记得清除 cookie
+          Cookies.remove('userid')
           this.props.logout()
           return <Redirect to='/login'/>
         }
@@ -48,6 +51,7 @@ class Personal extends React.Component<IProps>{
           img={<img src={avatar}/>}
           title={username}
           message={type==='hr' && company}
+          className="down"
         />
         <List renderHeader = {() => '相关信息'}>
           <List.Item>职位:&nbsp;&nbsp;{post}</List.Item>
@@ -58,6 +62,7 @@ class Personal extends React.Component<IProps>{
         <Button
          type="warning"
          onClick={this.handleClick}
+         className="logout"
         >
           退出登陆
         </Button>

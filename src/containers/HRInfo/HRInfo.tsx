@@ -94,10 +94,10 @@ class HRInfo extends Component<IProps, IState> {
           </InputItem>
           <WhiteSpace />
           <TextareaItem
-           title="公司介绍" 
+           title="岗位需求" 
            rows={2}
            onChange={value => this.handleChange('info', value)}
-           placeholder="公司介绍"
+           placeholder="岗位需求"
           />
           <WhiteSpace />
           <Button

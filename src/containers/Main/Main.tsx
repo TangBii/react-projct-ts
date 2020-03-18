@@ -95,7 +95,8 @@ class Main extends Component<IProps> {
     const currentTab = tabBarList.find(item => item.path === pathname)
     return (
       <>
-      {currentTab && <NavBar>{currentTab.title}</NavBar>}
+      {currentTab && <NavBar className="stick-top">{currentTab.title}</NavBar>}
+      <div className="content">
       <Switch>
         <Route path='/studentinfo' component={StuInfo}/>
         <Route path='/hrInfo' component={HRInfo}/>
@@ -109,6 +110,7 @@ class Main extends Component<IProps> {
           ))
         }
       </Switch>
+      </div>
       {currentTab &&  <TabBar 
         tabBarList={tabBarList} 
         history={this.props.history}

@@ -18,10 +18,15 @@ export const USER_NOHAS = 'user_nohas'
 // 退出登陆
 export const LOG_OUT = 'log_out'
 
+// 获取列表信息
+export const GET_LIST_SUCCESS = 'get_list_success'
+export const GET_LIST_FAIL = 'get_list_fail'
+
 type SUCCESS_OR_FAIL = typeof LOGIN_SUCCESS | typeof LOGIN_FAIL
 type UPDATE_OR_NO = typeof UPDATE_SUCCESS | typeof UPDATE_FAIL
 type USER_HAS_NO = typeof USER_HAS | typeof USER_NOHAS
 type LOG_OUT = typeof LOG_OUT
+type GETLIST_OR_NOT = typeof GET_LIST_FAIL | typeof GET_LIST_SUCCESS
 
 export interface IUser {
   _id: string
@@ -40,4 +45,9 @@ export interface LoginAction {
   data: string | IUser
 }
 
+
+export interface ListAction {
+  type: GETLIST_OR_NOT,
+  data: Array<IUser>
+}
 

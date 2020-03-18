@@ -1,6 +1,23 @@
+.stick-top {
+  position: fixed;
+  top: 0;
+  width: 100%;
+  z-index: 10;
+}
+.userList {
+  margin-top: 50px;
+  margin-bottom: 60px;
+}
 .am-tab-bar {
-  position: absolute;
+  position: fixed;
   bottom: 0;
   width: 100%;
-  z-index: -1;
+  z-index: 10;
+  height: 100%;
+}
+.logout {
+  z-index: 11;
+}
+.down {
+  margin-top: 50px;
 }

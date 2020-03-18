@@ -11,3 +11,6 @@ export const reqUpdate = (user: IData) => ajax('/update', user, 'POST')
 
 // 获取信息
 export const reqUserInfo = () => ajax('/getinfo')
+
+// 获取列表
+export const reqList = (type: string) => ajax('/getlist', {type})

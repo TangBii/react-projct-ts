@@ -7,7 +7,10 @@ import {
   UPDATE_FAIL,
   USER_HAS,
   USER_NOHAS,
+  GET_LIST_FAIL,
+  GET_LIST_SUCCESS,
   LoginAction,
+  ListAction,
   LOG_OUT
 } from './action-types'
 
@@ -60,9 +63,22 @@ function user(state = initailUser, action: LoginAction) {
   }
 }
 
+const initialList: Array<IUser> = []
+function list(state = initialList, action: ListAction) {
+  switch (action.type) {
+    case GET_LIST_SUCCESS:
+      return action.data
+    case GET_LIST_FAIL:
+      return initialList
+    default:
+      return initialList
+  }
+}
+
 
 const rootReducer = combineReducers({
-  user
+  user,
+  list
 })
 
 export type AppState = ReturnType<typeof rootReducer>

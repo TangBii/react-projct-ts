@@ -6,17 +6,19 @@ import {
   USER_HAS,
   USER_NOHAS,
   LOG_OUT,
+  GET_LIST_SUCCESS,
+  GET_LIST_FAIL,
   IUser
 } from "./action-types"
 import { Dispatch } from "redux"
-import Cookies from 'js-cookie'
 
 
 import { 
   reqRegister,
   reqLogin,
   reqUpdate,
-  reqUserInfo
+  reqUserInfo,
+  reqList
 } from "../ajax/index"
 
 // 同步
@@ -28,12 +30,11 @@ const updateFail = (message: string) => ({ type: UPDATE_FAIL, data: message })
 
 const hasUser = (user: IUser) => ({ type: USER_HAS, data: user })
 const noUser = (message: string) => ({ type: USER_NOHAS, data: message })
-export const logout = () => {
-  // 记得清除 cookie
-  Cookies.remove('userid')
-  return {type: LOG_OUT, data: 'logout'}
-}
 
+export const logout = () => {return {type: LOG_OUT, data: 'logout'}}
+
+export const getListSuccess = (users: Array<IUser>) => ({type: GET_LIST_SUCCESS, data: users})
+export const getListFail = (message: string) => ({type: GET_LIST_FAIL, data: message})
 
 // 登陆
 export function login(username: string, password: string, autoLogin: boolean) {
@@ -115,4 +116,18 @@ export function getUser() {
     }
   }
 
+}
+
+
+// 获取列表
+export function getList(type: string) {
+  return async (dispatch: Dispatch) => {
+    const response = await reqList(type)
+    const result = response.data
+    if (result.status === 0) {
+      dispatch(getListFail(result.message))
+    } else {
+      dispatch(getListSuccess(result.data))
+    }
+  }
 }
