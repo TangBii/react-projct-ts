@@ -6,3 +6,4 @@ export function getRedirectPath(type: string, head: string  | undefined) {
     return `/${type}info`
   }
 }
+

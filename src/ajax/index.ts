@@ -12,5 +12,8 @@ export const reqUpdate = (user: IData) => ajax('/update', user, 'POST')
 // 获取信息
 export const reqUserInfo = () => ajax('/getinfo')
 
-// 获取列表
+// 获取学生/HR列表
 export const reqList = (type: string) => ajax('/getlist', {type})
+
+// 获取信息列表
+export const reqMessageList = () => ajax('/getchatlist')

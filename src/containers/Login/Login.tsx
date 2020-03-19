@@ -14,13 +14,14 @@ import {
 
 import NavBar from '../../components/NavBar/NavBar'
 import Logo from '../../components/Logo/Logo'
-import {login} from '../../redux/actions'
+import {login, receiveMessageList} from '../../redux/actions'
 import {AppState} from '../../redux/reducers'
 
 const {Item} = List
 
 interface IProps extends RouteComponentProps {
   login: (username: string, password: string, autoLogin: boolean)=>any,
+  receiveMessageList: any
   message: string,
   redirectTo: string
 }
@@ -58,6 +59,7 @@ class Login extends Component<IProps, IState>{
   // 处理登陆
   handleLogin = (username: string, password: string, autoLogin: boolean) => {
     this.props.login(username, password, autoLogin)
+    // this.props.receiveMessageList()
     setTimeout(() => {
       if (this.props.message) {
         Modal.alert(' ', this.props.message)
@@ -133,5 +135,5 @@ class Login extends Component<IProps, IState>{
 
 export default connect(
   (state: AppState) => state.user,
-  {login}
+  {login, receiveMessageList}
 )(Login)

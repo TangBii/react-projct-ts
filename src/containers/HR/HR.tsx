@@ -2,10 +2,11 @@ import React from 'react'
 import {connect} from 'react-redux'
 import {AppState, IUser} from '../../redux/reducers'
 import {getList} from '../../redux/actions'
+import {RouteComponentProps} from 'react-router-dom'
 import {Card, WingBlank, WhiteSpace} from 'antd-mobile'
 const {Header, Body} = Card
 
-interface IProps{
+interface IProps extends RouteComponentProps{
   getList: (type: string) => any
   user: IUser
   list: Array<IUser>
@@ -13,10 +14,15 @@ interface IProps{
 
 class HR extends React.Component<IProps,{}>{
   componentWillMount() {
-    if (this.props.list.length === 0) {
+    // if (this.props.list.length === 0) {
       this.props.getList('student')
-    }
+    // }
   }
+
+  handleClick = (index: number) => {
+    this.props.history.push('/chat/' + this.props.list[index]._id!)
+  }
+
 
   render() {
     if (this.props.list.length === 0) {
@@ -27,8 +33,11 @@ class HR extends React.Component<IProps,{}>{
         <WingBlank size="lg" className="userList">
           <WhiteSpace/>
           {
-          this.props.list.map((item: IUser) => (
-            <Card key={item._id}>
+          this.props.list.map((item: IUser, index: number) => (
+            <Card
+             onClick={() => this.handleClick(index)}
+             key={item._id}
+            >
             <Header
               thumb={item.avatar!}
               extra={item.username}
@@ -49,6 +58,9 @@ class HR extends React.Component<IProps,{}>{
 }
 
 export default connect(
- (state: AppState) => ({list:state.list}),
+ (state: AppState) => ({
+   list:state.list,
+   user: state.user
+}),
  {getList}
 )(HR)

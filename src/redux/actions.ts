@@ -8,18 +8,36 @@ import {
   LOG_OUT,
   GET_LIST_SUCCESS,
   GET_LIST_FAIL,
-  IUser
+  GET_MESSAGE_LIST,
+  IUser,
+  IMessage,
 } from "./action-types"
 import { Dispatch } from "redux"
-
+import io from 'socket.io-client'
+import {IChat, IMessageServer, GET_A_MESSAGE} from '../redux/action-types'
 
 import { 
   reqRegister,
   reqLogin,
   reqUpdate,
   reqUserInfo,
-  reqList
+  reqList,
+  reqMessageList
 } from "../ajax/index"
+
+// 初始化 IO（单例模式） 连接服务器 + 绑定监听监听服务器返回的信息
+let socket:any = null
+function initIO(dispatch: Dispatch, userid: string) {
+  if (!socket) {
+    socket = io('ws://127.0.0.1:4300')
+    console.log('已连接服务器')
+    socket.on('ServerToClient', (message: IMessageServer) => {
+      if (message.from === userid || message.to === userid) {
+        dispatch(receiveMessage(message))
+      }
+   })
+  }
+}
 
 // 同步
 const loginSuccess = (user: IUser) => ({ type: LOGIN_SUCCESS, data: user })
@@ -118,8 +136,7 @@ export function getUser() {
 
 }
 
-
-// 获取列表
+// 获取学生/HR列表
 export function getList(type: string) {
   return async (dispatch: Dispatch) => {
     const response = await reqList(type)
@@ -128,6 +145,35 @@ export function getList(type: string) {
       dispatch(getListFail(result.message))
     } else {
       dispatch(getListSuccess(result.data))
+    }
+  }
+}
+
+// 获取消息列表
+const getMessage = (chats: IChat & IMessageServer) => {return {type: GET_MESSAGE_LIST, data: chats}}
+
+
+// 发送一条信息
+export function sendAMessage(message: IMessage) {
+  return async (dispatch: Dispatch) => {
+    socket.emit('ClientToServer', message)
+  }
+}
+
+// 接收信息
+const receiveMessage = (message: IMessageServer)  => 
+  {return {type: GET_A_MESSAGE, data: message}}
+
+// 接收信息列表
+export const receiveMessageList = (userid: string) => {
+  return  async (dispatch: Dispatch) => {
+    initIO(dispatch, userid)
+    const response = await reqMessageList()
+    const result = response.data
+    if (result.status === 0) {
+      return dispatch(loginFail('获取信息列表失败'))
+    } else {
+      return dispatch(getMessage(result.data))
     }
   }
 }

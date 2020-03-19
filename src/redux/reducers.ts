@@ -11,7 +11,12 @@ import {
   GET_LIST_SUCCESS,
   LoginAction,
   ListAction,
-  LOG_OUT
+  ChatAction,
+  IChat,
+  GET_A_MESSAGE,
+  LOG_OUT,
+  GET_MESSAGE_LIST,
+  IMessageServer
 } from './action-types'
 
 import {getRedirectPath} from '../utils/index'
@@ -71,14 +76,32 @@ function list(state = initialList, action: ListAction) {
     case GET_LIST_FAIL:
       return initialList
     default:
-      return initialList
+      return state
+  }
+}
+
+const initialChat: IChat = {
+  user: {},
+  chatList: [],
+  count: 0
+}
+
+function messages(state = initialChat, action: ChatAction) {
+  switch(action.type) {
+    case GET_A_MESSAGE: 
+      return {...state, chatList: [...state.chatList, action.data]}
+    case GET_MESSAGE_LIST: 
+      return {...state, ...action.data, count: 0}
+    default: 
+      return state
   }
 }
 
 
 const rootReducer = combineReducers({
   user,
-  list
+  list,
+  messages
 })
 
 export type AppState = ReturnType<typeof rootReducer>

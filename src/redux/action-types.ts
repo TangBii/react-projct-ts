@@ -22,11 +22,20 @@ export const LOG_OUT = 'log_out'
 export const GET_LIST_SUCCESS = 'get_list_success'
 export const GET_LIST_FAIL = 'get_list_fail'
 
+// 获取一条信息
+export const GET_A_MESSAGE = 'get_a_message'
+
+// 获取消息列表
+export const GET_MESSAGE_LIST = 'get_message_list'
+
 type SUCCESS_OR_FAIL = typeof LOGIN_SUCCESS | typeof LOGIN_FAIL
 type UPDATE_OR_NO = typeof UPDATE_SUCCESS | typeof UPDATE_FAIL
 type USER_HAS_NO = typeof USER_HAS | typeof USER_NOHAS
 type LOG_OUT = typeof LOG_OUT
 type GETLIST_OR_NOT = typeof GET_LIST_FAIL | typeof GET_LIST_SUCCESS
+type GET_A_MESSAGE = typeof GET_A_MESSAGE
+type GET_MESSAGE_LIST = typeof GET_MESSAGE_LIST
+
 
 export interface IUser {
   _id: string
@@ -40,6 +49,33 @@ export interface IUser {
 }
 
 
+export interface IChat{
+  user: {
+    [userid: string]: {
+      username: string,
+      avatar: string
+    }  | undefined
+  }
+  ,
+  chatList: Array<IMessageServer> | [],
+  count: number
+}
+
+export interface IMessage {
+  from: string,
+  to: string,
+  content: string
+}
+
+export interface IMessageServer {
+  from: string,
+  to: string,
+  belongTo: string,
+  content: string,
+  isRead: boolean,
+  date: string
+}
+
 export interface LoginAction {
   type: SUCCESS_OR_FAIL | UPDATE_OR_NO | USER_HAS_NO | LOG_OUT,
   data: string | IUser
@@ -51,3 +87,22 @@ export interface ListAction {
   data: Array<IUser>
 }
 
+
+export interface ChatAction {
+  type: GET_A_MESSAGE | GET_MESSAGE_LIST,
+  data: {  
+    user: {
+    username: string,
+    avatar: string
+  },
+  chatList: {
+    [userid: string]: {
+      from: string,
+      to: string,
+      belongTo: string,
+      content: string,
+      isRead: boolean,
+      date: string
+    }
+  }}
+}

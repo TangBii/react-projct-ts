@@ -6,20 +6,16 @@
 }
 
 .userList{
-  // position: relative;
   margin-top: 50px;
   margin-bottom: 60px;
+  z-index: 9;
 }
-
-// .content{
-//   position: inherit;
-// }
 
 .am-tab-bar{
   position: fixed;
   bottom: 0;
   width: 100%;
-  z-index:10;
+  z-index:-1;
   height: 100%;
 }
 
@@ -29,4 +25,37 @@
 
 .down{
   margin-top: 50px;
+}
+
+.sendMessageButton {
+  position: absolute !important;
+  right: 0;
+  top: 0px;
+  height: 44px;
+  padding: 0 5px;
+}
+
+.emoji {
+  right: 45px;
+}
+
+.chatBox {
+  position: fixed;
+  bottom: 0;
+  width: 100%;
+}
+
+.chat-item-me .am-list-content {
+  text-align: right !important;
+  margin-right: -100px;
+}
+
+.chat-item {
+  padding: 50px 0;
+}
+
+.chat-nav{
+  position: fixed;
+  width: 100%;
+  z-index: 10;
 }

@@ -13,7 +13,7 @@ import {
 
 import NavBar from "../../components/NavBar/NavBar"
 import Logo from "../../components/Logo/Logo"
-import { register } from "../../redux/actions"
+import { register, receiveMessageList} from "../../redux/actions"
 import {AppState} from '../../redux/reducers'
 
 const { Item } = List
@@ -22,6 +22,7 @@ interface IProps extends RouteComponentProps {
   register: (username: string, password: string, password2: string, type: string)=>any,
   message: string,
   redirectTo: string
+  receiveMessageList: any
 }
 
 interface IState {
@@ -57,6 +58,7 @@ class Register extends Component<IProps, IState> {
   handleRegister = (user: IState) => {
     const {username, password, password2, type} = user
     this.props.register(username, password, password2, type)
+    // this.props.receiveMessageList()
     setTimeout(() => {
       if (this.props.message) {
          Modal.alert(' ', this.props.message)
@@ -131,5 +133,5 @@ class Register extends Component<IProps, IState> {
 // AppState
 export default connect(
   (state: AppState) => state.user,
-  {register}
+  {register, receiveMessageList}
 )(Register)
