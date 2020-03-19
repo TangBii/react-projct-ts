@@ -17,3 +17,6 @@ export const reqList = (type: string) => ajax('/getlist', {type})
 
 // 获取信息列表
 export const reqMessageList = () => ajax('/getchatlist')
+
+// 阅读消息
+export const reqReadMessage = (from: string) => ajax('/readmessage', {from}, 'post')

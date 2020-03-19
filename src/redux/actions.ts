@@ -9,6 +9,7 @@ import {
   GET_LIST_SUCCESS,
   GET_LIST_FAIL,
   GET_MESSAGE_LIST,
+  READ_MESSAGE,
   IUser,
   IMessage,
 } from "./action-types"
@@ -22,7 +23,8 @@ import {
   reqUpdate,
   reqUserInfo,
   reqList,
-  reqMessageList
+  reqMessageList,
+  reqReadMessage
 } from "../ajax/index"
 
 // 初始化 IO（单例模式） 连接服务器 + 绑定监听监听服务器返回的信息
@@ -33,7 +35,7 @@ function initIO(dispatch: Dispatch, userid: string) {
     console.log('已连接服务器')
     socket.on('ServerToClient', (message: IMessageServer) => {
       if (message.from === userid || message.to === userid) {
-        dispatch(receiveMessage(message))
+        dispatch(receiveMessage(message, userid))
       }
    })
   }
@@ -150,7 +152,7 @@ export function getList(type: string) {
 }
 
 // 获取消息列表
-const getMessage = (chats: IChat & IMessageServer) => {return {type: GET_MESSAGE_LIST, data: chats}}
+const getMessage = (chats: IChat & IMessageServer, userid: string) => {return {type: GET_MESSAGE_LIST, data: {chats, userid}}}
 
 
 // 发送一条信息
@@ -161,8 +163,8 @@ export function sendAMessage(message: IMessage) {
 }
 
 // 接收信息
-const receiveMessage = (message: IMessageServer)  => 
-  {return {type: GET_A_MESSAGE, data: message}}
+const receiveMessage = (message: IMessageServer, userid: string)  => 
+  {return {type: GET_A_MESSAGE, data: {message, _id: userid}}}
 
 // 接收信息列表
 export const receiveMessageList = (userid: string) => {
@@ -171,9 +173,25 @@ export const receiveMessageList = (userid: string) => {
     const response = await reqMessageList()
     const result = response.data
     if (result.status === 0) {
-      return dispatch(loginFail('获取信息列表失败'))
+      return dispatch(loginFail(result.message))
     } else {
-      return dispatch(getMessage(result.data))
+      return dispatch(getMessage(result.data, userid))
+    }
+  }
+}
+
+// 读取信息
+const readM = (count: number) => ({type: READ_MESSAGE, data: count})
+
+
+export const readMessage = (from: string) => {
+  return async (dispatch: Dispatch) => {
+    const response = await reqReadMessage(from)
+    const result = response.data
+    if (result.status === 0) {
+      return dispatch(loginFail(result.message))
+    } else {
+      dispatch(readM(result.data))
     }
   }
 }

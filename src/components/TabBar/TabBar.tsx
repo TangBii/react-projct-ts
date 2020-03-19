@@ -1,6 +1,8 @@
 import React from 'react'
 import {TabBar} from 'antd-mobile'
-
+import {connect} from 'react-redux'
+import { AppState } from '../../redux/reducers'
+import { IChat } from '../../redux/action-types'
 const {Item} = TabBar
 
 interface IItem{
@@ -15,10 +17,11 @@ interface IItem{
 interface IProps {
   tabBarList: Array<IItem>
   history: any,
-  location: any
+  location: any,
+  messages: IChat
 }
 
-export default class MyTabBar extends React.Component<IProps>{
+ class MyTabBar extends React.Component<IProps>{
   constructor(props: IProps) {
     super(props)
   }
@@ -39,9 +42,14 @@ export default class MyTabBar extends React.Component<IProps>{
             selectedIcon={{uri: require(`./nav/${item.selectedIcon}.png`)}}
             selected={this.props.location.pathname === item.path}
             onPress={() => this.props.history.replace(item.path)}
+            badge={item.path==='/message'? this.props.messages.count: 0}
           />
         ))}
       </TabBar>
     )
   }
 }
+
+export default connect(
+  (state: AppState) => ({messages: state.messages})
+)(MyTabBar)

@@ -78,6 +78,7 @@ class Login extends Component<IProps, IState>{
         {
           Cookies.get('userid') &&
           this.props.redirectTo &&
+          this.props.receiveMessageList(Cookies.get('userid')!.slice(3, -1)) &&
           <Redirect to={this.props.redirectTo}/>
         }
         <NavBar title='比&nbsp;特&nbsp;树&nbsp;校&nbsp;招'/>

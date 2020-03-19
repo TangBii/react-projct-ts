@@ -1,6 +1,6 @@
 import React from 'react'
-import {NavBar, List, InputItem, Button, Grid} from 'antd-mobile'
-import {sendAMessage} from '../../redux/actions'
+import {NavBar, List, InputItem, Button, Grid, Icon} from 'antd-mobile'
+import {sendAMessage, readMessage, receiveMessageList} from '../../redux/actions'
 import {connect} from 'react-redux'
 import {AppState} from '../../redux/reducers'
 import {IUser, IChat, IMessageServer} from '../../redux/action-types'
@@ -16,7 +16,9 @@ interface IState {
 interface IProps extends RouteComponentProps{
   user: IUser,
   chat: IChat,
-  sendAMessage: ({}:{from: string, to: string, content: string}) => any
+  sendAMessage: ({}:{from: string, to: string, content: string}) => any,
+  readMessage: (from: string) => any,
+  receiveMessageList: (userid: string) => any
 }
 
 
@@ -78,6 +80,13 @@ class Chat extends React.Component<IProps, IState> {
     window.scrollTo(0, document.body.scrollHeight)
   }
 
+  handleBack = (userid: string, target: string) => {
+    // 和当前页面的聊天标记为已读
+    this.props.readMessage(target)
+    this.props.history.goBack()
+    this.props.receiveMessageList(userid)
+  }
+
   render() {
     let {user, chatList} = this.props.chat,
         target = (this.props.match.params as {userid: string}).userid
@@ -87,8 +96,16 @@ class Chat extends React.Component<IProps, IState> {
     )
     return (
       <div>
-        <NavBar className="chat-nav">{user[target]?.username}</NavBar>
-        <List>
+        <NavBar 
+          className="chat-nav"  
+          icon={<Icon type="left"/>}
+          onLeftClick = {() => this.handleBack(this.props.user._id, target)}
+        >
+          {user[target]?.username}
+        </NavBar>
+        <List
+          style={{margin:"50px 0"}}
+        >
           <div className="chat-item">
             {
               (chatList as []).map((item: IMessageServer, index: number) => (
@@ -113,8 +130,8 @@ class Chat extends React.Component<IProps, IState> {
               ))
             }
           </div>
-
-          <div
+        </List>
+        <div
             className='chatBox'
           >
             <InputItem
@@ -149,8 +166,6 @@ class Chat extends React.Component<IProps, IState> {
              />
              }
           </div>
-
-        </List>
       </div>
     )
   }
@@ -158,5 +173,5 @@ class Chat extends React.Component<IProps, IState> {
 
 export default connect(
   (state: AppState) => ({user: state.user, chat: state.messages}),
-  {sendAMessage}
+  {sendAMessage, readMessage, receiveMessageList}
 )(Chat)

@@ -16,7 +16,8 @@ import {
   GET_A_MESSAGE,
   LOG_OUT,
   GET_MESSAGE_LIST,
-  IMessageServer
+  IMessageServer,
+  READ_MESSAGE
 } from './action-types'
 
 import {getRedirectPath} from '../utils/index'
@@ -89,9 +90,20 @@ const initialChat: IChat = {
 function messages(state = initialChat, action: ChatAction) {
   switch(action.type) {
     case GET_A_MESSAGE: 
-      return {...state, chatList: [...state.chatList, action.data]}
-    case GET_MESSAGE_LIST: 
-      return {...state, ...action.data, count: 0}
+      const {message, _id} = action.data as any
+      return {
+        ...state,
+        chatList: [...state.chatList, message],
+        count: (!message.isRead && message.to === _id)? ++state.count: state.count
+      }
+    case GET_MESSAGE_LIST:
+      const {chats, userid} = action.data as any
+      let count = (state.chatList as []).reduce((sum: number, curr: IMessageServer) => {
+        return (!curr.isRead && userid === curr.to)? sum + 1: sum
+      }, 0)
+      return {...state, ...chats, count: count}
+    case READ_MESSAGE:
+      return {...state, count: state.count - (action.data as any)}
     default: 
       return state
   }

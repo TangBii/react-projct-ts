@@ -28,6 +28,9 @@ export const GET_A_MESSAGE = 'get_a_message'
 // 获取消息列表
 export const GET_MESSAGE_LIST = 'get_message_list'
 
+// 阅读消息
+export const READ_MESSAGE = 'read_message'
+
 type SUCCESS_OR_FAIL = typeof LOGIN_SUCCESS | typeof LOGIN_FAIL
 type UPDATE_OR_NO = typeof UPDATE_SUCCESS | typeof UPDATE_FAIL
 type USER_HAS_NO = typeof USER_HAS | typeof USER_NOHAS
@@ -35,6 +38,7 @@ type LOG_OUT = typeof LOG_OUT
 type GETLIST_OR_NOT = typeof GET_LIST_FAIL | typeof GET_LIST_SUCCESS
 type GET_A_MESSAGE = typeof GET_A_MESSAGE
 type GET_MESSAGE_LIST = typeof GET_MESSAGE_LIST
+type READ_MESSAGE = typeof READ_MESSAGE
 
 
 export interface IUser {
@@ -68,6 +72,7 @@ export interface IMessage {
 }
 
 export interface IMessageServer {
+  unreadCount: number
   from: string,
   to: string,
   belongTo: string,
@@ -81,15 +86,13 @@ export interface LoginAction {
   data: string | IUser
 }
 
-
 export interface ListAction {
   type: GETLIST_OR_NOT,
   data: Array<IUser>
 }
 
-
 export interface ChatAction {
-  type: GET_A_MESSAGE | GET_MESSAGE_LIST,
+  type: GET_A_MESSAGE | GET_MESSAGE_LIST | READ_MESSAGE,
   data: {  
     user: {
     username: string,
