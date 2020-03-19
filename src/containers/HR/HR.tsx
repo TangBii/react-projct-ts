@@ -52,8 +52,6 @@ class HR extends React.Component<IProps,{}>{
             ))
             }
           </QueueAnim>
-
-
         </WingBlank>
       </div>
     )
