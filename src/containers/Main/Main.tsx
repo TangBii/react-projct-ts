@@ -27,9 +27,6 @@ interface IProps extends RouteComponentProps{
 }
 
 class Main extends Component<IProps> {
-  constructor(props: IProps) {
-    super(props)
-  }
   componentWillMount() {
     // if (!Cookies.get('userid')) {
     //   this.props.receiveMessageList(Cookies.get('userid')!.slice(3, -1))

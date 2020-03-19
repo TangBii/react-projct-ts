@@ -16,7 +16,7 @@ interface IState {
 interface IProps extends RouteComponentProps{
   user: IUser,
   chat: IChat,
-  sendAMessage: ({}:{from: string, to: string, content: string}) => any,
+  sendAMessage: ({from, to, content}:{from: string, to: string, content: string}) => any,
   readMessage: (from: string) => any,
   receiveMessageList: (userid: string) => any
 }
@@ -112,7 +112,7 @@ class Chat extends React.Component<IProps, IState> {
                 item.from === this.props.user._id?
                 (
                     <Item
-                    extra={<img src={user[item.from]?.avatar}/>}
+                    extra={<img src={user[item.from]?.avatar} alt=""/>}
                     className='chat-item-me'
                     key={index}
                   >
@@ -121,7 +121,7 @@ class Chat extends React.Component<IProps, IState> {
                 ):
                 (
                   <Item
-                    thumb={<img src={user[item.from]?.avatar}/>}
+                    thumb={<img src={user[item.from]?.avatar} alt=""/>}
                     key={index}
                   >
                     {item.content}
@@ -146,7 +146,7 @@ class Chat extends React.Component<IProps, IState> {
               className="sendMessageButton emoji"
               onClick = {this.handleToggleEmoji}
               >
-            😀
+            <span role="img" aria-label="face">😀</span>
             </Button>
             <Button 
               type="primary"

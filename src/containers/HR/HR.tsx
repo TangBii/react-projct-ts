@@ -3,8 +3,10 @@ import {connect} from 'react-redux'
 import {AppState, IUser} from '../../redux/reducers'
 import {getList} from '../../redux/actions'
 import {RouteComponentProps} from 'react-router-dom'
+import QueueAnim from 'rc-queue-anim'
 import {Card, WingBlank, WhiteSpace} from 'antd-mobile'
 const {Header, Body} = Card
+
 
 interface IProps extends RouteComponentProps{
   getList: (type: string) => any
@@ -14,9 +16,7 @@ interface IProps extends RouteComponentProps{
 
 class HR extends React.Component<IProps,{}>{
   componentWillMount() {
-    // if (this.props.list.length === 0) {
       this.props.getList('student')
-    // }
   }
 
   handleClick = (index: number) => {
@@ -32,24 +32,27 @@ class HR extends React.Component<IProps,{}>{
       <div>
         <WingBlank size="lg" className="userList">
           <WhiteSpace/>
-          {
-          this.props.list.map((item: IUser, index: number) => (
-            <Card
-             onClick={() => this.handleClick(index)}
-             key={item._id}
-            >
-            <Header
-              thumb={item.avatar!}
-              extra={item.username}
-            />
-            <Body>
-              求职岗位:{item.post} <br/>
-              <WhiteSpace/>
-              个人介绍: {item.info}
-            </Body>
-          </Card>
-          ))
-          }
+          <QueueAnim>
+            {
+            this.props.list.map((item: IUser, index: number) => (
+              <Card
+              onClick={() => this.handleClick(index)}
+              key={item._id}
+              >
+              <Header
+                thumb={item.avatar!}
+                extra={item.username}
+              />
+              <Body>
+                求职岗位:{item.post} <br/>
+                <WhiteSpace/>
+                个人介绍: {item.info}
+              </Body>
+            </Card>
+            ))
+            }
+          </QueueAnim>
+
 
         </WingBlank>
       </div>

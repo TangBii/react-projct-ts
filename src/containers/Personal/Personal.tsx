@@ -48,7 +48,7 @@ class Personal extends React.Component<IProps>{
     return(
       <div>
         <Result
-          img={<img src={avatar}/>}
+          img={<img src={avatar} alt=""/>}
           title={username}
           message={type==='hr' && company}
           className="down"

@@ -43,7 +43,7 @@ export default class AvatarList extends Component<IProps, IState>{
 
     // 渲染标题
     const headStr = this.state.selected?
-                    <p>选择的头像是<img src={this.state.selected}/></p>:
+                    <p>选择的头像是<img src={this.state.selected} alt=""/></p>:
                     `请选择头像`
     return (
       <List renderHeader={() => headStr}>

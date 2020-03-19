@@ -45,7 +45,7 @@ const initailUser: IUser = {
 function user(state = initailUser, action: LoginAction) {
   let redirectTo = ''
   
-  if (typeof action.data !== 'string' && action.data != undefined) {
+  if (typeof action.data !== 'string' && action.data !== undefined) {
      redirectTo = getRedirectPath(action.data.type, action.data.avatar)
   }
   switch (action.type) {

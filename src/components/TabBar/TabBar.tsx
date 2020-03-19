@@ -22,10 +22,6 @@ interface IProps {
 }
 
  class MyTabBar extends React.Component<IProps>{
-  constructor(props: IProps) {
-    super(props)
-  }
-
   render() {
     let {tabBarList} = this.props    
     tabBarList = tabBarList.filter(item => !item.hide)
