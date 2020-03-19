@@ -71,6 +71,7 @@ class Message extends React.Component<IProps>{
                     <img 
                       src={chat.user[target]?.avatar}
                       style={{width:"100%", height: "100%"}}
+                      alt=""
                     />
                   }
                   extra={<Badge text={item.unreadCount}/>}
