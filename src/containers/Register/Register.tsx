@@ -13,26 +13,25 @@ import {
 
 import NavBar from "../../components/NavBar/NavBar"
 import Logo from "../../components/Logo/Logo"
-import { register, receiveMessageList} from "../../redux/actions"
+import {register} from "../../redux/actions"
 import {AppState} from '../../redux/reducers'
+import { IUser } from "../../redux/action-types"
 
 const { Item } = List
 
 interface IProps extends RouteComponentProps {
-  register: (username: string, password: string, password2: string, type: string)=>any,
-  message: string,
-  redirectTo: string
-  receiveMessageList: any
+  user: IUser
+  register: (user: IRegisterState)=>any,
 }
 
-interface IState {
+export interface IRegisterState {
   username: string
   password: string
   password2: string
   type: string
 }
 
-class Register extends Component<IProps, IState> {
+class Register extends Component<IProps, IRegisterState> {
   constructor(props: IProps) {
     super(props)
     
@@ -45,8 +44,8 @@ class Register extends Component<IProps, IState> {
   }
 
   // 收集表单输入
-  handleChange = (name: keyof IState, value: string) => {
-    this.setState({ [name]: value } as Pick<IState, keyof IState>)
+  handleChange = (name: keyof IRegisterState, value: string) => {
+    this.setState({ [name]: value } as Pick<IRegisterState, keyof IRegisterState>)
   }
 
   // 跳转到登陆页面
@@ -55,21 +54,21 @@ class Register extends Component<IProps, IState> {
   }
 
   // 注册
-  handleRegister = (user: IState) => {
-    const {username, password, password2, type} = user
-    this.props.register(username, password, password2, type)
-    // this.props.receiveMessageList()
+  handleRegister = () => {
+    this.props.register(this.state)
     setTimeout(() => {
-      if (this.props.message) {
-         Modal.alert(' ', this.props.message)
+      const {message} = this.props.user
+      if (message) {
+         Modal.alert(' ', message)
       }
     }, 300);
   }
 
   render() {
+    const {redirectTo} = this.props.user
     return (
       <div>
-        {this.props.redirectTo && <Redirect to={this.props.redirectTo}/>}
+        {redirectTo && <Redirect to={redirectTo}/>}
         <NavBar title='比&nbsp;特&nbsp;树&nbsp;校&nbsp;招'/>
         <Logo />
         <WingBlank>
@@ -102,7 +101,7 @@ class Register extends Component<IProps, IState> {
               <Radio
                 name="type"
                 checked={this.state.type === "student"}
-                onChange={value => this.handleChange("type", "student")}
+                onChange={() => this.handleChange("type", "student")}
               >
                 &nbsp;&nbsp;求职
               </Radio>
@@ -110,7 +109,7 @@ class Register extends Component<IProps, IState> {
               <Radio
                 name="type"
                 checked={this.state.type === "hr"}
-                onChange={value => this.handleChange("type", "hr")}
+                onChange={() => this.handleChange("type", "hr")}
               >
                 &nbsp;&nbsp;招聘
               </Radio>
@@ -118,7 +117,7 @@ class Register extends Component<IProps, IState> {
             <WhiteSpace />
             <Button
              type="primary"
-             onClick={() => this.handleRegister(this.state)}
+             onClick={this.handleRegister}
             >
               注册
             </Button>
@@ -132,6 +131,6 @@ class Register extends Component<IProps, IState> {
 
 // AppState
 export default connect(
-  (state: AppState) => state.user,
-  {register, receiveMessageList}
+  (state: AppState) => ({user: state.user}),
+  {register}
 )(Register)

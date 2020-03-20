@@ -8,10 +8,11 @@ import {Redirect} from 'react-router'
 import AvatarList from "../../components/AvatarList/AvatarList"
 import NavBar from '../../components/NavBar/NavBar'
 
-import {update} from '../../redux/actions'
+import {update, IUpdate} from '../../redux/actions'
+import { IUser } from "../../redux/action-types"
 
 
-interface IState{
+export interface IUpdateHRState{
   avatar: string,
   post: string
   company: string,
@@ -20,22 +21,15 @@ interface IState{
 }
 
 interface IProps{
-  update: (
-    avatar: string,
-    post?: string,
-    info?: string,
-    company?: string,
-    salary?: string
-  ) => any,
-  message: string,
-  redirectTo: string
+  user: IUser,
+  update: (userinfo: IUpdate) => any
 }
 
 export interface IChange{
-  (name: keyof IState, val: string | undefined) : void
+  (name: keyof IUpdateHRState, val: string | undefined) : void
 }
 
-class HRInfo extends Component<IProps, IState> {
+class HRInfo extends Component<IProps, IUpdateHRState> {
   constructor(props:IProps) {
     super(props)
     this.state = {
@@ -50,14 +44,13 @@ class HRInfo extends Component<IProps, IState> {
   handleChange:IChange = (name, val) => {
     this.setState({
       [name]: val
-    } as Pick<IState, keyof IState>)
+    } as Pick<IUpdateHRState, keyof IUpdateHRState>)
   }
 
   handleSave = () => {
-    const {avatar, post, company, info, salary} = this.state
-    this.props.update(avatar,post,info,company,salary)
+    this.props.update(this.state)
     setTimeout(() => {
-      let {message} = this.props
+      const {message} = this.props.user
       if (message)
       Modal.alert(' ', message)
     }, 100);
@@ -65,9 +58,10 @@ class HRInfo extends Component<IProps, IState> {
 
 
   render() {
+    const {redirectTo} = this.props.user
     return (
       <div>
-        {this.props.redirectTo && <Redirect to={this.props.redirectTo}/>}
+        {redirectTo && <Redirect to={redirectTo}/>}
         <NavBar title="完善用户信息"/>
         <AvatarList handleChange={this.handleChange}/>
         <List>
@@ -113,6 +107,6 @@ class HRInfo extends Component<IProps, IState> {
 }
 
 export default connect(
-  (state: AppState) => state.user,
+  (state: AppState) => ({user: state.user}),
   {update}
 )(HRInfo)

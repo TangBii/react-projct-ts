@@ -12,29 +12,32 @@ import Student from '../Student/Studnet'
 import HR from '../HR/HR'
 import Message from '../../containers/Message/Message'
 import Personal from '../../containers/Personal/Personal'
-import {getUser, receiveMessageList} from '../../redux/actions'
+import {getUser, receiveMessageList, logOut} from '../../redux/actions'
 import Chat from '../Chat/Chat'
-import { IUser } from '../../redux/action-types'
+import { IUser, IChat } from '../../redux/action-types'
 
 interface IProps extends RouteComponentProps{
+  user: IUser
+  // chat: IChat
   receiveMessageList: any
   getUser: any
-  username: string
-  message: string
-  type: string
-  redirectTo: string
-  user: IUser
+  logOut: any
+}
+
+export interface ITabBarListItem{
+  title: string
+  icon: string,
+  selectedIcon: string,
+  path: string,
+  component: any,
+  hide: boolean
 }
 
 class Main extends Component<IProps> {
   componentWillMount() {
-    // if (!Cookies.get('userid')) {
-    //   this.props.receiveMessageList(Cookies.get('userid')!.slice(3, -1))
-    // }
-    // 如果存在 cookie 请求获取 user
-    const {username} = this.props
+    const {username} = this.props.user
     if (Cookies.get('userid') && !username) {
-      this.props.getUser()
+      this.props.getUser()  
       this.props.receiveMessageList(Cookies.get('userid')!.slice(3, -1))
     }
   }
@@ -43,20 +46,21 @@ class Main extends Component<IProps> {
   render() {
     let {pathname} = this.props.location
     const userid = Cookies.get('userid'),
-          {username, type} = this.props
+          {username, type} = this.props.user
     if (!userid) {
+      this.props.logOut()
       return <Redirect to='/login'/>
     }
     if (!username) {
       return null
     } else {
       if(pathname === '/') {
-        pathname = this.props.redirectTo
+        pathname = this.props.user.redirectTo!
         return <Redirect to={pathname}/>
       }
       this.props.receiveMessageList(Cookies.get('userid')!.slice(3, -1))
     }
-    const tabBarList = [
+    const tabBarList: ITabBarListItem[] = [
       {
         title: '求职者列表',
         icon: 'graduate',
@@ -113,17 +117,20 @@ class Main extends Component<IProps> {
           ))
         }
       </Switch>
-      {currentTab &&  <TabBar 
-        tabBarList={tabBarList} 
-        history={this.props.history}
-        location={this.props.location}
-      />}
+      {
+        currentTab &&  <TabBar 
+          tabBarList={tabBarList}
+          history = {this.props.history}
+          location = {this.props.location}
+          match = {this.props.match}
+        />
+      }
       </>
     )
   }
 }
 
 export default connect(
-  (state: AppState) => state.user,
-  {getUser, receiveMessageList}
+  (state: AppState) => ({user: state.user}),
+  {getUser, receiveMessageList, logOut}
 )(Main)

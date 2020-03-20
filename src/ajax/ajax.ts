@@ -1,18 +1,13 @@
 import axios from 'axios'
 
-export interface IData{
-  [ket: string]: string | number | boolean | undefined
-}
-
-
-export default function ajax (url: string, data: IData = {}, type = 'GET') {
+export default function ajax (url: string, data = {}, type = 'GET') {
   type = type.toUpperCase()
   if(type === 'GET') {
 
     // 使用 GET 方式请求时 url 参数格式为 ?key=value&key=value
     let dataStr = '?'
     for(const key in data) {
-      dataStr += `${key}=${data[key]}&`
+      dataStr += `${key}=${(data as any)[key]}&`
     }
     url += dataStr.slice(0, -1)
     

@@ -1,6 +1,7 @@
 import React from 'react'
 import {connect} from 'react-redux'
-import {AppState, IUser} from '../../redux/reducers'
+import {AppState} from '../../redux/reducers'
+import {IUser} from '../../redux/action-types'
 import {getList} from '../../redux/actions'
 import {RouteComponentProps} from 'react-router-dom'
 import QueueAnim from 'rc-queue-anim'
@@ -9,9 +10,9 @@ const {Header, Body} = Card
 
 
 interface IProps extends RouteComponentProps{
-  getList: (type: string) => any
   user: IUser
   list: Array<IUser>
+  getList: (type: string) => any
 }
 
 class HR extends React.Component<IProps,{}>{

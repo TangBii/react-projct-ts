@@ -3,7 +3,7 @@ import {NavBar, List, InputItem, Button, Grid, Icon} from 'antd-mobile'
 import {sendAMessage, readMessage, receiveMessageList} from '../../redux/actions'
 import {connect} from 'react-redux'
 import {AppState} from '../../redux/reducers'
-import {IUser, IChat, IMessageServer} from '../../redux/action-types'
+import {IUser, IChat, IChatMessage} from '../../redux/action-types'
 import {RouteComponentProps} from 'react-router-dom'
 const {Item} = List
 
@@ -16,7 +16,7 @@ interface IState {
 interface IProps extends RouteComponentProps{
   user: IUser,
   chat: IChat,
-  sendAMessage: ({from, to, content}:{from: string, to: string, content: string}) => any,
+  sendAMessage: (message: IChatMessage) => any,
   readMessage: (from: string) => any,
   receiveMessageList: (userid: string) => any
 }
@@ -67,7 +67,6 @@ class Chat extends React.Component<IProps, IState> {
     }      
     // 清空输入框
     this.setState({inputStr:'', showEmoji: false})
-
   }
 
   componentDidMount() {
@@ -76,7 +75,7 @@ class Chat extends React.Component<IProps, IState> {
   }
 
   componentDidUpdate() {
-    // 滚动到底部
+    // 发送消息后滑动到底部
     window.scrollTo(0, document.body.scrollHeight)
   }
 
@@ -88,11 +87,12 @@ class Chat extends React.Component<IProps, IState> {
   }
 
   render() {
-    let {user, chatList} = this.props.chat,
+    let {users, chatList} = this.props.chat,
         target = (this.props.match.params as {userid: string}).userid
+
+    // 过滤出与自己有关的信息 
     chatList = chatList.filter(item => 
-      item.belongTo === 
-      [this.props.user._id, target].sort().join('_')
+      item.belongTo === [this.props.user._id, target].sort().join('_')
     )
     return (
       <div>
@@ -101,18 +101,18 @@ class Chat extends React.Component<IProps, IState> {
           icon={<Icon type="left"/>}
           onLeftClick = {() => this.handleBack(this.props.user._id, target)}
         >
-          {user[target]?.username}
+          {users[target]?.username}
         </NavBar>
         <List
           style={{margin:"50px 0"}}
         >
           <div className="chat-item">
             {
-              (chatList as []).map((item: IMessageServer, index: number) => (
+              (chatList as []).map((item: IChatMessage, index: number) => (
                 item.from === this.props.user._id?
                 (
                     <Item
-                    extra={<img src={user[item.from]?.avatar} alt=""/>}
+                    extra={<img src={users[item.from]?.avatar} alt=""/>}
                     className='chat-item-me'
                     key={index}
                   >
@@ -121,7 +121,7 @@ class Chat extends React.Component<IProps, IState> {
                 ):
                 (
                   <Item
-                    thumb={<img src={user[item.from]?.avatar} alt=""/>}
+                    thumb={<img src={users[item.from!]?.avatar} alt=""/>}
                     key={index}
                   >
                     {item.content}

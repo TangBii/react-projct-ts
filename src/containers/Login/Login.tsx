@@ -12,31 +12,30 @@ import {
   Modal
 } from 'antd-mobile'
 
+import {login} from '../../redux/actions'
+import { IUser } from '../../redux/action-types'
+import {AppState} from '../../redux/reducers'
 import NavBar from '../../components/NavBar/NavBar'
 import Logo from '../../components/Logo/Logo'
-import {login, receiveMessageList} from '../../redux/actions'
-import {AppState} from '../../redux/reducers'
 
 const {Item} = List
 
+
 interface IProps extends RouteComponentProps {
-  login: (username: string, password: string, autoLogin: boolean)=>any,
-  receiveMessageList: any
-  message: string,
-  redirectTo: string
+  user: IUser
+  login: (user: ILoginState)=>any,
 }
 
-interface IState {
+export interface ILoginState {
   username: string,
   password: string,
   autoLogin: boolean
 }
 
 
-class Login extends Component<IProps, IState>{
+class Login extends Component<IProps, ILoginState>{
   constructor(props: IProps) {
     super(props)
-
     this.state = {
       username: '',
       password: '',
@@ -45,10 +44,10 @@ class Login extends Component<IProps, IState>{
   }
 
   // 收集表单输入
-  handleChange = (name: keyof IState, value: string | boolean) => {
+  handleChange = (name: keyof ILoginState, value: string | boolean) => {
     this.setState({
       [name]: value
-    }as Pick<IState, keyof IState>)
+    }as Pick<ILoginState, keyof ILoginState>)
   }
 
   // 跳转到注册界面
@@ -57,15 +56,14 @@ class Login extends Component<IProps, IState>{
   }
 
   // 处理登陆
-  handleLogin = (username: string, password: string, autoLogin: boolean) => {
-    this.props.login(username, password, autoLogin)
-    // this.props.receiveMessageList()
+  handleLogin = () => {
+    this.props.login(this.state)
     setTimeout(() => {
-      if (this.props.message) {
-        Modal.alert(' ', this.props.message)
+      const {message} = this.props.user
+      if (message) {
+        Modal.alert(' ', message)
       }
     }, 300);
-
     // 需要一个延时才能设置好 cookie
     setTimeout(() => {
       this.setState({})
@@ -73,13 +71,13 @@ class Login extends Component<IProps, IState>{
   }
 
   render() {
+    const {redirectTo} = this.props.user
     return (
       <div>
         {
           Cookies.get('userid') &&
-          this.props.redirectTo &&
-          this.props.receiveMessageList(Cookies.get('userid')!.slice(3, -1)) &&
-          <Redirect to={this.props.redirectTo}/>
+          redirectTo &&
+          <Redirect to={redirectTo}/>
         }
         <NavBar title='比&nbsp;特&nbsp;树&nbsp;校&nbsp;招'/>
         <Logo/>
@@ -114,11 +112,7 @@ class Login extends Component<IProps, IState>{
             <WhiteSpace/>
             <Button
              type="primary"
-             onClick={() => this.handleLogin(
-               this.state.username,
-               this.state.password,
-               this.state.autoLogin
-               )}
+             onClick={this.handleLogin}
             >
               登陆
             </Button>
@@ -135,6 +129,6 @@ class Login extends Component<IProps, IState>{
 }
 
 export default connect(
-  (state: AppState) => state.user,
-  {login, receiveMessageList}
+  (state: AppState) => ({user: state.user}),
+  {login}
 )(Login)

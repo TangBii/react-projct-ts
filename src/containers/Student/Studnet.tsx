@@ -1,6 +1,7 @@
 import React from 'react'
 import {connect} from 'react-redux'
-import {AppState, IUser} from '../../redux/reducers'
+import {AppState} from '../../redux/reducers'
+import {IUser} from '../../redux/action-types'
 import {getList} from '../../redux/actions'
 import {Card, WingBlank, WhiteSpace} from 'antd-mobile'
 import {RouteComponentProps} from 'react-router-dom'
@@ -14,9 +15,7 @@ interface IProps extends RouteComponentProps{
 
 class Student extends React.Component<IProps,{}>{
   componentWillMount() {
-    // if (this.props.list.length === 0) {
-      this.props.getList('hr')
-    // }
+    this.props.getList('hr')
   }
 
   handleClick = (index: number) => {

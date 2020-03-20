@@ -1,44 +1,43 @@
 import React from 'react'
 import {connect} from 'react-redux'
 import {List, Badge} from 'antd-mobile'
-import { AppState, IUser } from '../../redux/reducers'
-import { IMessageServer, IChat } from '../../redux/action-types'
+import {AppState} from '../../redux/reducers'
+import {IUser} from '../../redux/action-types'
+import {IChatMessage, IChat } from '../../redux/action-types'
 import {RouteComponentProps} from 'react-router-dom'
 import {readMessage} from '../../redux/actions'
 const {Item} = List
 
 
 interface IGroups {
-    [belongTo: string]: IMessageServer,
+    [belongTo: string]: IChatMessage,
 }
 
 
-function getLastMessages(messages: Array<IMessageServer>, userid: string) {
+function getLastMessages(messages: Array<IChatMessage>, userid: string) {
   // 获取最后一个消息数组
   const messageGroups: IGroups = {}
   messages.forEach(message => {
     const {belongTo, date} = message
-    if (!messageGroups[belongTo]) {
-      messageGroups[belongTo] = message
+    if (!messageGroups[belongTo!]) {
+      messageGroups[belongTo!] = message
       message.unreadCount = (!message.isRead && message.to === userid)? 1: 0
     } else {
-      const preMessage = messageGroups[belongTo]
+      const preMessage = messageGroups[belongTo!]
       message.unreadCount = 0
-      if (date > preMessage.date) {
+      if (date! > preMessage.date!) {
         message.unreadCount = preMessage.unreadCount
-        messageGroups[belongTo] = message
+        messageGroups[belongTo!] = message
       }
-      message.unreadCount = message.unreadCount + 
+      message.unreadCount = message.unreadCount! + 
                             ((!message.isRead && message.to === userid)? 1: 0)
     }
   })
   return Object.values(messageGroups)
-         .sort((message1: IMessageServer, message2: IMessageServer) =>(
+         .sort((message1: IChatMessage, message2: IChatMessage) =>(
             Number(message2.date) - Number(message1.date)
          ))
 }
-
-
 
 
 interface IProps extends RouteComponentProps{
@@ -69,7 +68,7 @@ class Message extends React.Component<IProps>{
                 key={target}
                   thumb={
                     <img 
-                      src={chat.user[target]?.avatar}
+                      src={chat.users[target]?.avatar}
                       style={{width:"100%", height: "100%"}}
                       alt=""
                     />
@@ -78,7 +77,7 @@ class Message extends React.Component<IProps>{
                   arrow="horizontal"
                   onClick={() => this.handleClick(target)}
                 >
-                  {chat.user[target]?.username}
+                  {chat.users[target]?.username}
                     <Item.Brief>
                       {item.content}
                     </Item.Brief>

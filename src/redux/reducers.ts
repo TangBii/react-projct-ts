@@ -1,67 +1,55 @@
 import {combineReducers} from 'redux'
 
 import {
-  LOGIN_SUCCESS,
-  LOGIN_FAIL,
-  UPDATE_SUCCESS,
-  UPDATE_FAIL,
-  USER_HAS,
-  USER_NOHAS,
-  GET_LIST_FAIL,
+  AUTHENTICATION_SUCCESS,
+  FAIL,
+  UPDATE,
+  GET_USER,
   GET_LIST_SUCCESS,
-  LoginAction,
+  LOG_OUT,
+  GET_A_MESSAGE,
+  GET_MESSAGE_LIST,
+  READ_MESSAGE,
+  UserAction,
   ListAction,
   ChatAction,
+  IUser,
   IChat,
-  GET_A_MESSAGE,
-  LOG_OUT,
-  GET_MESSAGE_LIST,
-  IMessageServer,
-  READ_MESSAGE
+  IChatMessage,
 } from './action-types'
 
 import {getRedirectPath} from '../utils/index'
 
 
-export interface IUser {
-  username: string,
-  type: string,
-  message: string
-  avatar?: string,
-  post?: string,
-  info?: string,
-  company?: string,
-  salary?: string ,
-  redirectTo?: string  // 传递重定向地址数据
-  _id?: string
-}
-
+// user
 const initailUser: IUser = {
+  _id: '',
   username: '',
   type: '',
-  message: ''
+  avatar: '',
+  post: '',
+  info: '',
+  company: '',
+  salary: '',
+  message: '',
+  redirectTo: ''
 }
-// RegisterAction
-function user(state = initailUser, action: LoginAction) {
+function user(state = initailUser, action: UserAction) {
   let redirectTo = ''
   
   if (typeof action.data !== 'string' && action.data !== undefined) {
      redirectTo = getRedirectPath(action.data.type, action.data.avatar)
   }
   switch (action.type) {
-    case LOGIN_SUCCESS:
+    case AUTHENTICATION_SUCCESS:
       // 注意清空错误信息
         return {...state, message:'', ...(action.data as object), redirectTo}
-    case LOGIN_FAIL:
+    case FAIL:
       return {...state, message: action.data}
-    case UPDATE_SUCCESS:
+    case UPDATE:
       return {...state, message: '', ...(action.data as object), redirectTo}
-    case UPDATE_FAIL:
-      return {...state, message: action.data}
-    case USER_HAS:
+    case GET_USER:
       return {...state, message:'',...(action.data as object), redirectTo}
-    case USER_NOHAS:
-      return {...state, message: action.data}
     case LOG_OUT:
       return initailUser
     default: 
@@ -69,24 +57,29 @@ function user(state = initailUser, action: LoginAction) {
   }
 }
 
+
+// userList
 const initialList: Array<IUser> = []
 function list(state = initialList, action: ListAction) {
   switch (action.type) {
     case GET_LIST_SUCCESS:
       return action.data
-    case GET_LIST_FAIL:
+    case FAIL:
+      return initialList
+    case LOG_OUT:
       return initialList
     default:
       return state
   }
 }
 
+
+// chat
 const initialChat: IChat = {
-  user: {},
+  users: {},
   chatList: [],
   count: 0
 }
-
 function messages(state = initialChat, action: ChatAction) {
   switch(action.type) {
     case GET_A_MESSAGE: 
@@ -98,17 +91,19 @@ function messages(state = initialChat, action: ChatAction) {
       }
     case GET_MESSAGE_LIST:
       const {chats, userid} = action.data as any
-      let count = (state.chatList as []).reduce((sum: number, curr: IMessageServer) => {
+      const chatList = [...state.chatList, ...chats.chatList]
+      let count = (chats.chatList as []).reduce((sum: number, curr: IChatMessage) => {
         return (!curr.isRead && userid === curr.to)? sum + 1: sum
       }, 0)
       return {...state, ...chats, count: count}
     case READ_MESSAGE:
       return {...state, count: state.count - (action.data as any)}
+    case LOG_OUT:
+      return initialChat
     default: 
       return state
   }
 }
-
 
 const rootReducer = combineReducers({
   user,

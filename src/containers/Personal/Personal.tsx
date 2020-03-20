@@ -6,17 +6,12 @@ import Cookies from 'js-cookie'
 
 
 import {AppState} from '../../redux/reducers'
-import {logout} from '../../redux/actions'
+import {IUser} from '../../redux/action-types'
+import {logOut} from '../../redux/actions'
 
 interface IProps{
-  logout: any,
-  avatar: string,
-  username: string,
-  post: string,
-  type: string,
-  info: string,
-  company: string,
-  salary: string
+  user: IUser,
+  logOut: any
 }
 
 
@@ -35,16 +30,14 @@ class Personal extends React.Component<IProps>{
         onPress: () => {
           // 记得清除 cookie
           Cookies.remove('userid')
-          this.props.logout()
+          this.props.logOut()
           return <Redirect to='/login'/>
         }
       }
     ])
-
   }
-
   render() {
-    const {avatar, username, post, type, info, company, salary} = this.props
+    const {avatar, username, post, type, info, company, salary} = this.props.user
     return(
       <div>
         <Result
@@ -72,8 +65,8 @@ class Personal extends React.Component<IProps>{
 }
 
 export default connect(
-  (state:AppState) => state.user,
-  {logout}
+  (state:AppState) => ({user: state.user}),
+  {logOut}
 )(Personal)
 
 

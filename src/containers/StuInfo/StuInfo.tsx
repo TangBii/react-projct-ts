@@ -7,33 +7,25 @@ import {Redirect} from 'react-router'
 
 import AvatarList from "../../components/AvatarList/AvatarList"
 import NavBar from '../../components/NavBar/NavBar'
-import {update} from '../../redux/actions'
+import {update, IUpdate} from '../../redux/actions'
+import {IUser} from '../../redux/action-types'
 
-
-interface IState{
+export interface IUpdateStuState{
   avatar: string
   post: string,
   info: string
 }
 
-
 interface IProps{
-  update: (
-    avatar: string,
-    post?: string,
-    info?: string,
-    company?: string,
-    salary?: string
-  ) => any,
-  message: string,
-  redirectTo: string
+  user: IUser
+  update: (userInfo: IUpdate) => any
 }
 
 export interface IChange{
-  (name: keyof IState, val: string | undefined) : void
+  (name: keyof IUpdateStuState, val: string | undefined) : void
 }
 
-class StuInfo extends Component<IProps, IState> {
+class StuInfo extends Component<IProps, IUpdateStuState> {
   constructor(props:IProps) {
     super(props)
     this.state = {
@@ -46,14 +38,13 @@ class StuInfo extends Component<IProps, IState> {
   handleChange:IChange = (name, val) => {
     this.setState({
       [name]: val
-    } as Pick<IState, keyof IState>)
+    } as Pick<IUpdateStuState, keyof IUpdateStuState>)
   }
 
   handleSave = () => {
-    const {avatar, post, info} = this.state
-    this.props.update(avatar, post, info)
+    this.props.update((this.state as IUpdate))
     setTimeout(() => {
-      let {message} = this.props
+      const {message} = this.props.user
       if (message)
       Modal.alert(' ', message)
     }, 100);
@@ -61,9 +52,10 @@ class StuInfo extends Component<IProps, IState> {
 
 
   render() {
+    const {redirectTo} = this.props.user
     return (
       <div>
-        {this.props.redirectTo && <Redirect to={this.props.redirectTo}/>}
+        {redirectTo && <Redirect to={redirectTo}/>}
         <NavBar title="完善用户信息"/>
         <AvatarList handleChange={this.handleChange}/>
         <List>
@@ -95,6 +87,6 @@ class StuInfo extends Component<IProps, IState> {
 }
 
 export default connect(
-  (state: AppState) => state.user,
+  (state: AppState) => ({user: state.user}),
   {update}
 )(StuInfo)
