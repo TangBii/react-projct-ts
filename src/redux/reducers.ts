@@ -91,7 +91,6 @@ function messages(state = initialChat, action: ChatAction) {
       }
     case GET_MESSAGE_LIST:
       const {chats, userid} = action.data as any
-      const chatList = [...state.chatList, ...chats.chatList]
       let count = (chats.chatList as []).reduce((sum: number, curr: IChatMessage) => {
         return (!curr.isRead && userid === curr.to)? sum + 1: sum
       }, 0)

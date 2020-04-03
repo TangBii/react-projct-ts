@@ -14,7 +14,7 @@ import Message from '../../containers/Message/Message'
 import Personal from '../../containers/Personal/Personal'
 import {getUser, receiveMessageList, logOut} from '../../redux/actions'
 import Chat from '../Chat/Chat'
-import { IUser, IChat } from '../../redux/action-types'
+import { IUser} from '../../redux/action-types'
 
 interface IProps extends RouteComponentProps{
   user: IUser

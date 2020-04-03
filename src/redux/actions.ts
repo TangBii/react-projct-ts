@@ -8,7 +8,6 @@ import {
   GET_MESSAGE_LIST,
   GET_A_MESSAGE,
   READ_MESSAGE,
-  IChat,
   IChatMessage,
   IUser
 } from "./action-types"
